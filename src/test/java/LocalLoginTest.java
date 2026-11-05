@@ -14,18 +14,25 @@ public class LocalLoginTest {
     WebDriver driver;
 
     @BeforeMethod
-    public void setUp() {
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
 
-        String page = new File("webapp/login.html")
-                .getAbsoluteFile()
-                .toURI()
-                .toString();
+@BeforeMethod
+public void setUp() {
+    ChromeOptions options = new ChromeOptions();
 
-        driver.get(page);
-    }
+    options.addArguments("--headless=new");
+    options.addArguments("--no-sandbox");
+    options.addArguments("--disable-dev-shm-usage");
+    options.addArguments("--window-size=1920,1080");
 
+    driver = new ChromeDriver(options);
+
+    String page = new File("webapp/login.html")
+            .getAbsoluteFile()
+            .toURI()
+            .toString();
+
+    driver.get(page);
+}
     @Test
     public void validLoginTest() {
         driver.findElement(By.id("username")).sendKeys("student");
