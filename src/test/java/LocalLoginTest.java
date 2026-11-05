@@ -4,6 +4,8 @@ import java.io.File;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -14,32 +16,34 @@ public class LocalLoginTest {
     WebDriver driver;
 
     @BeforeMethod
+    public void setUp() {
 
-@BeforeMethod
-public void setUp() {
-    ChromeOptions options = new ChromeOptions();
+        ChromeOptions options = new ChromeOptions();
 
-    options.addArguments("--headless=new");
-    options.addArguments("--no-sandbox");
-    options.addArguments("--disable-dev-shm-usage");
-    options.addArguments("--window-size=1920,1080");
+        options.addArguments("--headless=new");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--window-size=1920,1080");
 
-    driver = new ChromeDriver(options);
+        driver = new ChromeDriver(options);
 
-    String page = new File("webapp/login.html")
-            .getAbsoluteFile()
-            .toURI()
-            .toString();
+        String page = new File("webapp/login.html")
+                .getAbsoluteFile()
+                .toURI()
+                .toString();
 
-    driver.get(page);
-}
+        driver.get(page);
+    }
+
     @Test
     public void validLoginTest() {
+
         driver.findElement(By.id("username")).sendKeys("student");
         driver.findElement(By.id("password")).sendKeys("12345");
         driver.findElement(By.id("loginButton")).click();
 
         String message = driver.findElement(By.id("message")).getText();
+
         System.out.println("Message: " + message);
 
         Assert.assertEquals(message, "Login Successful");
@@ -47,11 +51,13 @@ public void setUp() {
 
     @Test
     public void invalidLoginTest() {
+
         driver.findElement(By.id("username")).sendKeys("wrong");
         driver.findElement(By.id("password")).sendKeys("wrong");
         driver.findElement(By.id("loginButton")).click();
 
         String message = driver.findElement(By.id("message")).getText();
+
         System.out.println("Message: " + message);
 
         Assert.assertEquals(message, "Invalid Username or Password");
@@ -59,6 +65,7 @@ public void setUp() {
 
     @Test
     public void checkBackgroundColor() {
+
         String bgColor = driver.findElement(By.id("loginBox"))
                 .getCssValue("background-color");
 
@@ -68,8 +75,8 @@ public void setUp() {
     }
 
     @AfterMethod
-    public void tearDown() throws InterruptedException {
-    	Thread.sleep(3000);
+    public void tearDown() {
+
         if (driver != null) {
             driver.quit();
         }
